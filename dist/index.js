@@ -1704,20 +1704,20 @@ const run = async () => {
   //   `scanning internationalization keys in ${srcDir} against language files in ${localeDir}`
   // );
 
-  // function getAllFiles(dirPath, fileArray) {
-  //   fs.readdirSync(dirPath).forEach(function (file) {
-  //     let filePath = path.join(dirPath, file);
-  //     let stat = fs.statSync(filePath);
-  //     if (stat.isDirectory()) {
-  //       core.debug(`directory found at ${filePath}`)
-  //       getAllFiles(filePath, fileArray);
-  //     } else {
-  //       core.debug(`file ${filePath} found`)
-  //       fileArray.push(filePath);
-  //     }
-  //   });
-  //   return fileArray;
-  // }
+  function getAllFiles(dirPath, fileArray) {
+    fs.readdirSync(dirPath).forEach(function (file) {
+      let filePath = path.join(dirPath, file);
+      let stat = fs.statSync(filePath);
+      if (stat.isDirectory()) {
+        core.debug(`directory found at ${filePath}`)
+        getAllFiles(filePath, fileArray);
+      } else {
+        core.debug(`file ${filePath} found`)
+        fileArray.push(filePath);
+      }
+    });
+    return fileArray;
+  }
 
   // const fileArray = getAllFiles(srcDir, []);
   // core.debug(fileArray);
