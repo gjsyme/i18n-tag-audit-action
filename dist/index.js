@@ -1694,7 +1694,7 @@ const run = async () => {
 
   let grepArray = [];
   if(grepList){
-    grepArray = grepList.split(',').map(item => item.split(':')[1].trim());
+    grepArray = grepList.split(',').map(item => item.split(':')[1]?.trim());
   }
   core.debug('grep array');
   core.debug(grepArray);
