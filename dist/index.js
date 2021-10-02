@@ -1750,6 +1750,8 @@ const run = async () => {
   if (Object.keys(missTracker).length > 0) {
     Object.keys(missTracker).forEach((fileName) => {
       core.warning(`Missing keys in ./${fileName}:\n [${missTracker[fileName].join(', ')}]`);
+      // for local dev
+      console.log(`Missing keys in ./${fileName}:\n [${missTracker[fileName].join(', ')}]`);
     });
   } else {
     core.notice('i18n audit found no missing keys');
