@@ -1688,7 +1688,7 @@ const core = __nccwpck_require__(186);
 const run = async () => {
   const srcDir = core.getInput('srcDir', { required: true });
   const localeDir = core.getInput('localeDir', { required: true });
-  
+
   core.debug(
     `scanning internationalization keys in ${srcDir} against language files in ${localeDir}`
   );
@@ -1706,9 +1706,9 @@ const run = async () => {
     return fileArray;
   }
 
-  const fileArray = getAllFiles(srcDir, []);
+  const fileArray = getAllFiles(`./${srcDir}`, []);
   core.debug('fileArray',fileArray);
-  const languageFiles = getAllFiles(localeDir, []);
+  const languageFiles = getAllFiles(`${localeDir}`, []);
   core.debug('language files',languageFiles);
 
   const regex = /(\s|\{)t\(\'(\w*)\'/;
