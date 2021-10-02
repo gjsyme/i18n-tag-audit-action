@@ -1698,21 +1698,19 @@ const run = async () => {
       let filePath = path.join(dirPath, file);
       let stat = fs.statSync(filePath);
       if (stat.isDirectory()) {
+        core.debug(`directory found at ${filePath}`)
         getAllFiles(filePath, fileArray);
       } else {
+        core.debug(`file ${filePath} found`)
         fileArray.push(filePath);
       }
     });
     return fileArray;
   }
 
-  // try to print from root
-  const rootArray = getAllFiles('/', []);
-  core.debug(rootArray);
-
-  const fileArray = getAllFiles(`/${srcDir}`, []);
+  const fileArray = getAllFiles(srcDir, []);
   core.debug('fileArray',fileArray);
-  const languageFiles = getAllFiles(`/${localeDir}`, []);
+  const languageFiles = getAllFiles(localeDir, []);
   core.debug('language files',languageFiles);
 
   const regex = /(\s|\{)t\(\'(\w*)\'/;
