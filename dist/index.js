@@ -1709,14 +1709,15 @@ const run = async () => {
   }
 
   const fileArray = getAllFiles(srcDir, []);
-  core.debug('fileArray',fileArray);
+  core.debug(fileArray);
   const languageFiles = getAllFiles(localeDir, []);
-  core.debug('language files',languageFiles);
+  core.debug(languageFiles);
 
   const regex = /(\s|\{)t\(\'(\w*)\'/;
   const keys = [];
   const rejects = [];
   fileArray.forEach((filePath) => {
+    core.debug(`checking in file ${filePath}`)
     const fileContents = fs.readFileSync(filePath, {
       encoding: 'utf-8',
       flag: 'r',
@@ -1735,6 +1736,7 @@ const run = async () => {
 
   // and now we can check our translations for these keys
   languageFiles.forEach((filePath) => {
+    core.debug(`checking languages file ${filePath}`);
     const fileContents = fs.readFileSync(filePath, {
       encoding: 'utf-8',
       flag: 'r',
