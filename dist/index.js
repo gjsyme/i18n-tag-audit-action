@@ -1755,6 +1755,7 @@ const run = async () => {
 
   if (Object.keys(missTracker).length > 0) {
     Object.keys(missTracker).forEach((fileName) => {
+      core.debug(`Missing keys in ./${fileName}:\n [${missTracker[fileName].join(', ')}]`);
       core.notice(`Missing keys in ./${fileName}:\n [${missTracker[fileName].join(', ')}]`);
     });
   }
