@@ -1695,7 +1695,8 @@ const run = async () => {
   let grepArray = [];
   if(grepList){
     grepArray = grepList.split(',').map(item => item.split(':')[1]?.trim())
-      .map(item => item?.replace("t('", ''));
+      .map(item => item?.replace("t('", '').replace("'",""))
+      .filter(item => item);
   }
   core.debug('grep array');
   core.debug(grepArray);
@@ -1720,8 +1721,8 @@ const run = async () => {
 
   // const fileArray = getAllFiles(srcDir, []);
   // core.debug(fileArray);
-  // const languageFiles = getAllFiles(localeDir, []);
-  // core.debug(languageFiles);
+  const languageFiles = getAllFiles(localeDir, []);
+  core.debug(languageFiles);
 
   // const regex = /(\s|\{)t\(\'(\w*)\'/;
   // const keys = [];
@@ -1744,37 +1745,38 @@ const run = async () => {
 
   // // now reduce to uniques
   // const uniqueKeys = [...new Set(keys)];
-  // const missTracker = {};
+  const uniqueKeys = [...new Set(grepArray)];
+  const missTracker = {};
   // core.debug(`unique keys: ${uniqueKeys}`)
 
   // // and now we can check our translations for these keys
-  // languageFiles.forEach((filePath) => {
-  //   core.debug(`checking languages file ${filePath}`);
-  //   const fileContents = fs.readFileSync(filePath, {
-  //     encoding: 'utf-8',
-  //     flag: 'r',
-  //   });
-  //   core.debug(fileContents);
-  //   // turn that filecontent back into an object and get its keys
-  //   const contentObject = JSON.parse(fileContents);
-  //   uniqueKeys.forEach((key) => {
-  //     if (!contentObject[key]) {
-  //       if (!missTracker[filePath]) {
-  //         missTracker[filePath] = [];
-  //       }
-  //       missTracker[filePath].push(key);
-  //     }
-  //   });
-  // });
+  languageFiles.forEach((filePath) => {
+    core.debug(`checking languages file ${filePath}`);
+    const fileContents = fs.readFileSync(filePath, {
+      encoding: 'utf-8',
+      flag: 'r',
+    });
+    core.debug(fileContents);
+    // turn that filecontent back into an object and get its keys
+    const contentObject = JSON.parse(fileContents);
+    uniqueKeys.forEach((key) => {
+      if (!contentObject[key]) {
+        if (!missTracker[filePath]) {
+          missTracker[filePath] = [];
+        }
+        missTracker[filePath].push(key);
+      }
+    });
+  });
 
-  // core.debug(`misstracker: ${missTracker}`)
+  core.debug(`misstracker: ${missTracker}`)
 
-  // if (Object.keys(missTracker).length > 0) {
-  //   Object.keys(missTracker).forEach((fileName) => {
-  //     core.debug(`Missing keys in ./${fileName}:\n [${missTracker[fileName].join(', ')}]`);
-  //     core.notice(`Missing keys in ./${fileName}:\n [${missTracker[fileName].join(', ')}]`);
-  //   });
-  // }
+  if (Object.keys(missTracker).length > 0) {
+    Object.keys(missTracker).forEach((fileName) => {
+      core.debug(`Missing keys in ./${fileName}:\n [${missTracker[fileName].join(', ')}]`);
+      core.notice(`Missing keys in ./${fileName}:\n [${missTracker[fileName].join(', ')}]`);
+    });
+  }
 }
 
 run();
