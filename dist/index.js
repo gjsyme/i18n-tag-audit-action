@@ -1,4 +1,4 @@
-require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
+/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
 /***/ 351:
@@ -1685,79 +1685,80 @@ const core = __nccwpck_require__(186);
 // if any don't, then they are noted
 // after iterating over all language files, the resulting misses are printed to the command line
 // but if everything is translated, then it prints a success message instead.
+const run = async () => {
+  console.log(
+    'scanning internationalization keys in',
+    core.getInput('srcDir', { required: true }),
+    'against language files in',
+    core.getInput('languageDir', { required: true }),
+  );
 
-console.log(
-  'scanning internationalization keys in',
-  core.getInput('srcDir', { required: true }),
-  'against language files in',
-  core.getInput('languageDir', { required: true }),
-);
-
-function getAllFiles(dirPath, fileArray) {
-  fs.readdirSync(dirPath).forEach(function (file) {
-    let filePath = path.join(dirPath, file);
-    let stat = fs.statSync(filePath);
-    if (stat.isDirectory()) {
-      getAllFiles(filePath, fileArray);
-    } else {
-      fileArray.push(filePath);
-    }
-  });
-  return fileArray;
-}
-
-const fileArray = getAllFiles(process.argv[2], []);
-const languageFiles = getAllFiles(process.argv[3], []);
-
-const regex = /(\s|\{)t\(\'(\w*)\'/;
-const keys = [];
-const rejects = (/* unused pure expression or super */ null && ([]));
-fileArray.forEach((filePath) => {
-  const fileContents = fs.readFileSync(filePath, {
-    encoding: 'utf-8',
-    flag: 'r',
-  });
-  fileContents.split('\n').forEach((textLine) => {
-    const result = regex.exec(textLine);
-    if (result) {
-      keys.push(result[2]);
-    }
-  });
-});
-
-// now reduce to uniques
-const uniqueKeys = [...new Set(keys)];
-const missTracker = {};
-
-// and now we can check our translations for these keys
-languageFiles.forEach((filePath) => {
-  const fileContents = fs.readFileSync(filePath, {
-    encoding: 'utf-8',
-    flag: 'r',
-  });
-  // turn that filecontent back into an object and get its keys
-  const contentObject = JSON.parse(fileContents);
-  uniqueKeys.forEach((key) => {
-    if (!contentObject[key]) {
-      if (!missTracker[filePath]) {
-        missTracker[filePath] = [];
+  function getAllFiles(dirPath, fileArray) {
+    fs.readdirSync(dirPath).forEach(function (file) {
+      let filePath = path.join(dirPath, file);
+      let stat = fs.statSync(filePath);
+      if (stat.isDirectory()) {
+        getAllFiles(filePath, fileArray);
+      } else {
+        fileArray.push(filePath);
       }
-      missTracker[filePath].push(key);
-    }
-  });
-});
+    });
+    return fileArray;
+  }
 
-if (Object.keys(missTracker).length > 0) {
-  Object.keys(missTracker).forEach((fileName) => {
-    core.warning(`Missing keys in ./${fileName}:\n [${missTracker[fileName].join(', ')}]`);
+  const fileArray = getAllFiles(process.argv[2], []);
+  const languageFiles = getAllFiles(process.argv[3], []);
+
+  const regex = /(\s|\{)t\(\'(\w*)\'/;
+  const keys = [];
+  const rejects = [];
+  fileArray.forEach((filePath) => {
+    const fileContents = fs.readFileSync(filePath, {
+      encoding: 'utf-8',
+      flag: 'r',
+    });
+    fileContents.split('\n').forEach((textLine) => {
+      const result = regex.exec(textLine);
+      if (result) {
+        keys.push(result[2]);
+      }
+    });
   });
-} else {
-  core.notice('i18n audit found no missing keys');
+
+  // now reduce to uniques
+  const uniqueKeys = [...new Set(keys)];
+  const missTracker = {};
+
+  // and now we can check our translations for these keys
+  languageFiles.forEach((filePath) => {
+    const fileContents = fs.readFileSync(filePath, {
+      encoding: 'utf-8',
+      flag: 'r',
+    });
+    // turn that filecontent back into an object and get its keys
+    const contentObject = JSON.parse(fileContents);
+    uniqueKeys.forEach((key) => {
+      if (!contentObject[key]) {
+        if (!missTracker[filePath]) {
+          missTracker[filePath] = [];
+        }
+        missTracker[filePath].push(key);
+      }
+    });
+  });
+
+  if (Object.keys(missTracker).length > 0) {
+    Object.keys(missTracker).forEach((fileName) => {
+      core.warning(`Missing keys in ./${fileName}:\n [${missTracker[fileName].join(', ')}]`);
+    });
+  } else {
+    core.notice('i18n audit found no missing keys');
+  }
 }
 
+run();
 })();
 
 module.exports = __webpack_exports__;
 /******/ })()
 ;
-//# sourceMappingURL=index.js.map

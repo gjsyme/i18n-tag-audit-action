@@ -6,9 +6,9 @@ inputs:
     required: true
     default: 'src'
   languageDir: # directory of the language folders
-    description: 'languages dir in the application'
+    description: 'locales dir in the application'
     required: true
-    default: 'public/languages'
+    default: 'public/locales'
 outputs:
   missingObject: # id of output
     description: 'The top level object containing file names and missing keys'
