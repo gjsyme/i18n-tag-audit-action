@@ -1,10 +1,10 @@
 name: 'i18n tag audit'
 description: 'Record i18n keys that are not defined per file in next-i18n-next'
 inputs:
-  srcDir:  # directory of application source
-    description: 'Source directory for next application'
+  grepList:  # string list from git grep
+    description: 'output from git grep as manipulated in prior steps'
     required: true
-    default: 'src'
+    default: []
   localeDir: # directory of the language folders
     description: 'locales dir in the application'
     required: true

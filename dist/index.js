@@ -1686,85 +1686,88 @@ const core = __nccwpck_require__(186);
 // after iterating over all language files, the resulting misses are printed to the command line
 // but if everything is translated, then it prints a success message instead.
 const run = async () => {
-  const srcDir = core.getInput('srcDir', { required: true });
+  // const srcDir = core.getInput('srcDir', { required: true });
+  const grepList = core.getInput('grepList', { required: true });
   const localeDir = core.getInput('localeDir', { required: true });
 
-  core.debug(
-    `scanning internationalization keys in ${srcDir} against language files in ${localeDir}`
-  );
+  core.debug(grepList);
 
-  function getAllFiles(dirPath, fileArray) {
-    fs.readdirSync(dirPath).forEach(function (file) {
-      let filePath = path.join(dirPath, file);
-      let stat = fs.statSync(filePath);
-      if (stat.isDirectory()) {
-        core.debug(`directory found at ${filePath}`)
-        getAllFiles(filePath, fileArray);
-      } else {
-        core.debug(`file ${filePath} found`)
-        fileArray.push(filePath);
-      }
-    });
-    return fileArray;
-  }
+  // core.debug(
+  //   `scanning internationalization keys in ${srcDir} against language files in ${localeDir}`
+  // );
 
-  const fileArray = getAllFiles(srcDir, []);
-  core.debug(fileArray);
-  const languageFiles = getAllFiles(localeDir, []);
-  core.debug(languageFiles);
+  // function getAllFiles(dirPath, fileArray) {
+  //   fs.readdirSync(dirPath).forEach(function (file) {
+  //     let filePath = path.join(dirPath, file);
+  //     let stat = fs.statSync(filePath);
+  //     if (stat.isDirectory()) {
+  //       core.debug(`directory found at ${filePath}`)
+  //       getAllFiles(filePath, fileArray);
+  //     } else {
+  //       core.debug(`file ${filePath} found`)
+  //       fileArray.push(filePath);
+  //     }
+  //   });
+  //   return fileArray;
+  // }
 
-  const regex = /(\s|\{)t\(\'(\w*)\'/;
-  const keys = [];
-  const rejects = [];
-  fileArray.forEach((filePath) => {
-    core.debug(`checking in file ${filePath}`)
-    const fileContents = fs.readFileSync(filePath, {
-      encoding: 'utf-8',
-      flag: 'r',
-    });
-    core.debug(fileContents);
-    fileContents.split('\n').forEach((textLine) => {
-      const result = regex.exec(textLine);
-      if (result) {
-        keys.push(result[2]);
-      }
-    });
-  });
-  core.debug(`keys: ${keys}`)
+  // const fileArray = getAllFiles(srcDir, []);
+  // core.debug(fileArray);
+  // const languageFiles = getAllFiles(localeDir, []);
+  // core.debug(languageFiles);
 
-  // now reduce to uniques
-  const uniqueKeys = [...new Set(keys)];
-  const missTracker = {};
-  core.debug(`unique keys: ${uniqueKeys}`)
+  // const regex = /(\s|\{)t\(\'(\w*)\'/;
+  // const keys = [];
+  // const rejects = [];
+  // fileArray.forEach((filePath) => {
+  //   core.debug(`checking in file ${filePath}`)
+  //   const fileContents = fs.readFileSync(filePath, {
+  //     encoding: 'utf-8',
+  //     flag: 'r',
+  //   });
+  //   core.debug(fileContents);
+  //   fileContents.split('\n').forEach((textLine) => {
+  //     const result = regex.exec(textLine);
+  //     if (result) {
+  //       keys.push(result[2]);
+  //     }
+  //   });
+  // });
+  // core.debug(`keys: ${keys}`)
 
-  // and now we can check our translations for these keys
-  languageFiles.forEach((filePath) => {
-    core.debug(`checking languages file ${filePath}`);
-    const fileContents = fs.readFileSync(filePath, {
-      encoding: 'utf-8',
-      flag: 'r',
-    });
-    core.debug(fileContents);
-    // turn that filecontent back into an object and get its keys
-    const contentObject = JSON.parse(fileContents);
-    uniqueKeys.forEach((key) => {
-      if (!contentObject[key]) {
-        if (!missTracker[filePath]) {
-          missTracker[filePath] = [];
-        }
-        missTracker[filePath].push(key);
-      }
-    });
-  });
+  // // now reduce to uniques
+  // const uniqueKeys = [...new Set(keys)];
+  // const missTracker = {};
+  // core.debug(`unique keys: ${uniqueKeys}`)
 
-  core.debug(`misstracker: ${missTracker}`)
+  // // and now we can check our translations for these keys
+  // languageFiles.forEach((filePath) => {
+  //   core.debug(`checking languages file ${filePath}`);
+  //   const fileContents = fs.readFileSync(filePath, {
+  //     encoding: 'utf-8',
+  //     flag: 'r',
+  //   });
+  //   core.debug(fileContents);
+  //   // turn that filecontent back into an object and get its keys
+  //   const contentObject = JSON.parse(fileContents);
+  //   uniqueKeys.forEach((key) => {
+  //     if (!contentObject[key]) {
+  //       if (!missTracker[filePath]) {
+  //         missTracker[filePath] = [];
+  //       }
+  //       missTracker[filePath].push(key);
+  //     }
+  //   });
+  // });
 
-  if (Object.keys(missTracker).length > 0) {
-    Object.keys(missTracker).forEach((fileName) => {
-      core.debug(`Missing keys in ./${fileName}:\n [${missTracker[fileName].join(', ')}]`);
-      core.notice(`Missing keys in ./${fileName}:\n [${missTracker[fileName].join(', ')}]`);
-    });
-  }
+  // core.debug(`misstracker: ${missTracker}`)
+
+  // if (Object.keys(missTracker).length > 0) {
+  //   Object.keys(missTracker).forEach((fileName) => {
+  //     core.debug(`Missing keys in ./${fileName}:\n [${missTracker[fileName].join(', ')}]`);
+  //     core.notice(`Missing keys in ./${fileName}:\n [${missTracker[fileName].join(', ')}]`);
+  //   });
+  // }
 }
 
 run();
