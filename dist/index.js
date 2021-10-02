@@ -1706,6 +1706,10 @@ const run = async () => {
     return fileArray;
   }
 
+  // try to print from root
+  const rootArray = getAllFiles('/', []);
+  core.debug(rootArray);
+
   const fileArray = getAllFiles(`/${srcDir}`, []);
   core.debug('fileArray',fileArray);
   const languageFiles = getAllFiles(`/${localeDir}`, []);
