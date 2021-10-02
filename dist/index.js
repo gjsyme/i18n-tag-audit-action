@@ -1686,7 +1686,7 @@ const core = __nccwpck_require__(186);
 // after iterating over all language files, the resulting misses are printed to the command line
 // but if everything is translated, then it prints a success message instead.
 const run = async () => {
-  console.log(
+  core.debug(
     'scanning internationalization keys in',
     core.getInput('srcDir', { required: true }),
     'against language files in',
@@ -1707,7 +1707,9 @@ const run = async () => {
   }
 
   const fileArray = getAllFiles(process.argv[2], []);
+  core.debug('fileArray',fileArray);
   const languageFiles = getAllFiles(process.argv[3], []);
+  core.debug('language files',languageFiles);
 
   const regex = /(\s|\{)t\(\'(\w*)\'/;
   const keys = [];
@@ -1749,12 +1751,8 @@ const run = async () => {
 
   if (Object.keys(missTracker).length > 0) {
     Object.keys(missTracker).forEach((fileName) => {
-      core.warning(`Missing keys in ./${fileName}:\n [${missTracker[fileName].join(', ')}]`);
-      // for local dev
-      console.log(`Missing keys in ./${fileName}:\n [${missTracker[fileName].join(', ')}]`);
+      core.notice(`Missing keys in ./${fileName}:\n [${missTracker[fileName].join(', ')}]`);
     });
-  } else {
-    core.notice('i18n audit found no missing keys');
   }
 }
 
