@@ -1,0 +1,17 @@
+name: 'i18n tag audit'
+description: 'Record i18n keys that are not defined per file in next-i18n-next'
+inputs:
+  srcDir:  # directory of application source
+    description: 'Source directory for next application'
+    required: true
+    default: 'src'
+  languageDir: # directory of the language folders
+    description: 'languages dir in the application'
+    required: true
+    default: 'public/languages'
+outputs:
+  missingObject: # id of output
+    description: 'The top level object containing file names and missing keys'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
