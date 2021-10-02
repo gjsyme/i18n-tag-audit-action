@@ -1706,9 +1706,9 @@ const run = async () => {
     return fileArray;
   }
 
-  const fileArray = getAllFiles(`./${srcDir}`, []);
+  const fileArray = getAllFiles(`/${srcDir}`, []);
   core.debug('fileArray',fileArray);
-  const languageFiles = getAllFiles(`${localeDir}`, []);
+  const languageFiles = getAllFiles(`/${localeDir}`, []);
   core.debug('language files',languageFiles);
 
   const regex = /(\s|\{)t\(\'(\w*)\'/;
