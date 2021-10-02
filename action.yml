@@ -4,7 +4,7 @@ inputs:
   grepList:  # string list from git grep
     description: 'output from git grep as manipulated in prior steps'
     required: true
-    default: []
+    default: ''
   localeDir: # directory of the language folders
     description: 'locales dir in the application'
     required: true
