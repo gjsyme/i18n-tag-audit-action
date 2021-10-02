@@ -1722,6 +1722,7 @@ const run = async () => {
       encoding: 'utf-8',
       flag: 'r',
     });
+    core.debug(fileContents);
     fileContents.split('\n').forEach((textLine) => {
       const result = regex.exec(textLine);
       if (result) {
@@ -1729,10 +1730,12 @@ const run = async () => {
       }
     });
   });
+  core.debug(`keys: ${keys}`)
 
   // now reduce to uniques
   const uniqueKeys = [...new Set(keys)];
   const missTracker = {};
+  core.debug(`unique keys: ${uniqueKeys}`)
 
   // and now we can check our translations for these keys
   languageFiles.forEach((filePath) => {
@@ -1741,6 +1744,7 @@ const run = async () => {
       encoding: 'utf-8',
       flag: 'r',
     });
+    core.debug(fileContents);
     // turn that filecontent back into an object and get its keys
     const contentObject = JSON.parse(fileContents);
     uniqueKeys.forEach((key) => {
@@ -1752,6 +1756,8 @@ const run = async () => {
       }
     });
   });
+
+  core.debug(`misstracker: ${missTracker}`)
 
   if (Object.keys(missTracker).length > 0) {
     Object.keys(missTracker).forEach((fileName) => {
