@@ -1687,14 +1687,15 @@ const core = __nccwpck_require__(186);
 // but if everything is translated, then it prints a success message instead.
 const run = async () => {
   // const srcDir = core.getInput('srcDir', { required: true });
-  const grepList = core.getInput('grepList', { required: true });
+  const grepList = core.getInput('grepList', { required: true })?.trim();
   const localeDir = core.getInput('localeDir', { required: true });
   core.debug(`grepList`);
   core.debug(grepList);
 
   let grepArray = [];
   if(grepList){
-    grepArray = grepList.split(',').map(item => item.split(':')[1]?.trim());
+    grepArray = grepList.split(',').map(item => item.split(':')[1]?.trim())
+      .map(item => item.replace("t('", ''));
   }
   core.debug('grep array');
   core.debug(grepArray);
