@@ -1689,9 +1689,15 @@ const run = async () => {
   // const srcDir = core.getInput('srcDir', { required: true });
   const grepList = core.getInput('grepList', { required: true });
   const localeDir = core.getInput('localeDir', { required: true });
-
+  core.debug(`grepList`);
   core.debug(grepList);
 
+  let grepArray = [];
+  if(grepList){
+    grepArray = grepList.split(',').map(item => item.split(':')[1].trim());
+  }
+  core.debug('grep array');
+  core.debug(grepArray);
   // core.debug(
   //   `scanning internationalization keys in ${srcDir} against language files in ${localeDir}`
   // );
