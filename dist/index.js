@@ -1686,11 +1686,11 @@ const core = __nccwpck_require__(186);
 // after iterating over all language files, the resulting misses are printed to the command line
 // but if everything is translated, then it prints a success message instead.
 const run = async () => {
+  const srcDir = core.getInput('srcDir', { required: true });
+  const localeDir = core.getInput('localeDir', { required: true });
+  
   core.debug(
-    'scanning internationalization keys in',
-    core.getInput('srcDir', { required: true }),
-    'against language files in',
-    core.getInput('languageDir', { required: true }),
+    `scanning internationalization keys in ${srcDir} against language files in ${localeDir}`
   );
 
   function getAllFiles(dirPath, fileArray) {
@@ -1706,9 +1706,9 @@ const run = async () => {
     return fileArray;
   }
 
-  const fileArray = getAllFiles(process.argv[2], []);
+  const fileArray = getAllFiles(srcDir, []);
   core.debug('fileArray',fileArray);
-  const languageFiles = getAllFiles(process.argv[3], []);
+  const languageFiles = getAllFiles(localeDir, []);
   core.debug('language files',languageFiles);
 
   const regex = /(\s|\{)t\(\'(\w*)\'/;

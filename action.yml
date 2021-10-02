@@ -5,7 +5,7 @@ inputs:
     description: 'Source directory for next application'
     required: true
     default: 'src'
-  languageDir: # directory of the language folders
+  localeDir: # directory of the language folders
     description: 'locales dir in the application'
     required: true
     default: 'public/locales'
