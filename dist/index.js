@@ -1686,8 +1686,7 @@ const core = __nccwpck_require__(186);
 // after iterating over all language files, the resulting misses are printed to the command line
 // but if everything is translated, then it prints a success message instead.
 const run = async () => {
-  // const srcDir = core.getInput('srcDir', { required: true });
-  const grepList = core.getInput('grepList', { required: true })?.trim();
+  const grepList = core.getInput('grepList', { required: true }).trim();
   const localeDir = core.getInput('localeDir', { required: true });
   core.debug(`grepList`);
   core.debug(grepList);
@@ -1698,11 +1697,6 @@ const run = async () => {
       .map(item => item?.replace("t('", '').replace("'",""))
       .filter(item => item);
   }
-  core.debug('grep array');
-  core.debug(grepArray);
-  // core.debug(
-  //   `scanning internationalization keys in ${srcDir} against language files in ${localeDir}`
-  // );
 
   function getAllFiles(dirPath, fileArray) {
     fs.readdirSync(dirPath).forEach(function (file) {
@@ -1719,35 +1713,12 @@ const run = async () => {
     return fileArray;
   }
 
-  // const fileArray = getAllFiles(srcDir, []);
-  // core.debug(fileArray);
   const languageFiles = getAllFiles(localeDir, []);
   core.debug(languageFiles);
 
-  // const regex = /(\s|\{)t\(\'(\w*)\'/;
-  // const keys = [];
-  // const rejects = [];
-  // fileArray.forEach((filePath) => {
-  //   core.debug(`checking in file ${filePath}`)
-  //   const fileContents = fs.readFileSync(filePath, {
-  //     encoding: 'utf-8',
-  //     flag: 'r',
-  //   });
-  //   core.debug(fileContents);
-  //   fileContents.split('\n').forEach((textLine) => {
-  //     const result = regex.exec(textLine);
-  //     if (result) {
-  //       keys.push(result[2]);
-  //     }
-  //   });
-  // });
-  // core.debug(`keys: ${keys}`)
-
   // // now reduce to uniques
-  // const uniqueKeys = [...new Set(keys)];
   const uniqueKeys = [...new Set(grepArray)];
   const missTracker = {};
-  // core.debug(`unique keys: ${uniqueKeys}`)
 
   // // and now we can check our translations for these keys
   languageFiles.forEach((filePath) => {
@@ -1773,7 +1744,7 @@ const run = async () => {
 
   if (Object.keys(missTracker).length > 0) {
     Object.keys(missTracker).forEach((fileName) => {
-      core.debug(`Missing keys in ./${fileName}:\n [${missTracker[fileName].join(', ')}]`);
+      // core.debug(`Missing keys in ./${fileName}:\n [${missTracker[fileName].join(', ')}]`);
       core.notice(`Missing keys in ./${fileName}:\n [${missTracker[fileName].join(', ')}]`);
     });
   }
