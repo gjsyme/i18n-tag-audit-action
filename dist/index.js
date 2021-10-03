@@ -1693,9 +1693,12 @@ const run = async () => {
 
   let grepArray = [];
   if(grepList){
-    grepArray = grepList.split(',').map(item => item.split(':')[1]?.trim())
-      .map(item => item?.replace("t('", '').replace("'",""))
-      .filter(item => item);
+    grepArray = grepList.split(',').map(item => item.split(':')[1] ? 
+        item.split(':')[1].trim() : 
+        null
+      )
+      .filter(item => item)
+      .map(item => item.replace("t('", '').replace("'",""));
   }
 
   function getAllFiles(dirPath, fileArray) {
